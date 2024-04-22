@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WindSync.Core\WindSync.Core.csproj" />
+    <ProjectReference Include="..\WindSync.DAL\WindSync.DAL.csproj" />
+  </ItemGroup>
+
+</Project>
