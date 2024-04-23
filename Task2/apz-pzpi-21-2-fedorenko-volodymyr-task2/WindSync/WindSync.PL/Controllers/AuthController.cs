@@ -23,7 +23,7 @@ namespace WindSync.PL.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginViewModel model)
         {
             var loginDto = _mapper.Map<LoginDto>(model);
             var token = await _authService.Login(loginDto);
@@ -36,7 +36,7 @@ namespace WindSync.PL.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<ActionResult> Register([FromBody] RegisterViewModel model)
         {
             var registerDto = _mapper.Map<RegisterDto>(model);
             var registerResult = await _authService.Register(registerDto);
@@ -49,7 +49,7 @@ namespace WindSync.PL.Controllers
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
+        public async Task<ActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
         {
             var registerDto = _mapper.Map<RegisterDto>(model);
             var registerResult = await _authService.Register(registerDto);
@@ -63,7 +63,7 @@ namespace WindSync.PL.Controllers
         [Authorize]
         [HttpGet]
         [Route("test")]
-        public IActionResult Test()
+        public async Task<ActionResult> Test()
         {
             return Ok();
         }

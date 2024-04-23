@@ -9,7 +9,10 @@ Configuration.ConfigureSwagger(builder);
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "WindSync API v1");
+});
 
 app.UseHttpsRedirection();
 

@@ -19,7 +19,6 @@ public static class Configuration
         // Standart services
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         // Custom services
         builder.Services.AddScoped<IAuthService, AuthService>();
