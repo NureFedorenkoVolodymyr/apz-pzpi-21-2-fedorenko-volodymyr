@@ -26,7 +26,7 @@ namespace WindSync.PL.Controllers
         public async Task<ActionResult<string>> Login([FromBody] LoginViewModel model)
         {
             var loginDto = _mapper.Map<LoginDto>(model);
-            var token = await _authService.Login(loginDto);
+            var token = await _authService.LoginAsync(loginDto);
 
             if (token is null)
                 return Unauthorized();
@@ -39,7 +39,7 @@ namespace WindSync.PL.Controllers
         public async Task<ActionResult> Register([FromBody] RegisterViewModel model)
         {
             var registerDto = _mapper.Map<RegisterDto>(model);
-            var registerResult = await _authService.Register(registerDto);
+            var registerResult = await _authService.RegisterAsync(registerDto);
 
             if(!registerResult)
                 return BadRequest();
@@ -52,7 +52,7 @@ namespace WindSync.PL.Controllers
         public async Task<ActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
         {
             var registerDto = _mapper.Map<RegisterDto>(model);
-            var registerResult = await _authService.Register(registerDto);
+            var registerResult = await _authService.RegisterAsync(registerDto);
 
             if (!registerResult)
                 return BadRequest();

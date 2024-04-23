@@ -5,7 +5,7 @@ namespace WindSync.BLL.Services;
 
 public interface IAuthService
 {
-    Task<JwtSecurityToken?> Login(LoginDto model);
-    Task<bool> Register(RegisterDto model);
-    Task<bool> RegisterAdmin(RegisterDto model);
+    Task<JwtSecurityToken?> LoginAsync(LoginDto model);
+    Task<bool> RegisterAsync(RegisterDto model);
+    Task<bool> RegisterAdminAsync(RegisterDto model);
 }

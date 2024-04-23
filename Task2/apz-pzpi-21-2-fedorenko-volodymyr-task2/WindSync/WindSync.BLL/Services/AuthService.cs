@@ -26,10 +26,10 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public async Task<JwtSecurityToken?> Login(LoginDto model)
+    public async Task<JwtSecurityToken?> LoginAsync(LoginDto model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+        if (user is not null && await _userManager.CheckPasswordAsync(user, model.Password))
         {
             var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -50,10 +50,10 @@ public class AuthService : IAuthService
         return null;
     }
 
-    public async Task<bool> Register(RegisterDto model)
+    public async Task<bool> RegisterAsync(RegisterDto model)
     {
         var userExists = await _userManager.FindByNameAsync(model.Username);
-        if (userExists != null)
+        if (userExists is not null)
             return false;
 
         User user = new ()
@@ -77,10 +77,10 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<bool> RegisterAdmin(RegisterDto model)
+    public async Task<bool> RegisterAdminAsync(RegisterDto model)
     {
         var userExists = await _userManager.FindByNameAsync(model.Username);
-        if (userExists != null)
+        if (userExists is not null)
             return false;
 
         User user = new()
