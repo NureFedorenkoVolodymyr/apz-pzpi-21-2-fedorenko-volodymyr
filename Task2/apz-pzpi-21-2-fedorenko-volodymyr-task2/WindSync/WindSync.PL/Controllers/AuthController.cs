@@ -29,7 +29,7 @@ namespace WindSync.PL.Controllers
             var token = await _authService.LoginAsync(loginDto);
 
             if (token is null)
-                return Unauthorized();
+                return BadRequest();
 
             return Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }

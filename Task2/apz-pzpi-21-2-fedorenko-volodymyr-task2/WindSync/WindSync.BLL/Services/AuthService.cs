@@ -110,6 +110,11 @@ public class AuthService : IAuthService
         return true;
     }
 
+    public async Task<User> GetUserByUsernameAsync(string username)
+    {
+        return await _userManager.FindByNameAsync(username);
+    }
+
     private JwtSecurityToken GetToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));

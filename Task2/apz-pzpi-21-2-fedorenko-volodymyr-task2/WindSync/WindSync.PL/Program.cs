@@ -1,4 +1,5 @@
 using WindSync.PL.Configuration;
+using WindSync.PL.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,5 +21,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<UserIdMiddleware>();
 
 app.Run();

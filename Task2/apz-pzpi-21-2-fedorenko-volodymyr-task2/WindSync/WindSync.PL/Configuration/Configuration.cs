@@ -9,6 +9,7 @@ using WindSync.BLL.Utils;
 using WindSync.Core.Models;
 using WindSync.Core.Utils;
 using WindSync.DAL.DB;
+using WindSync.DAL.Repositories;
 
 namespace WindSync.PL.Configuration;
 
@@ -20,8 +21,18 @@ public static class Configuration
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
-        // Custom services
+        // Services
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IAlertService, AlertService>();
+        builder.Services.AddScoped<ITurbineDataService, TurbineDataService>();
+        builder.Services.AddScoped<ITurbineService, TurbineService>();
+        builder.Services.AddScoped<IWindFarmService, WindFarmService>();
+
+        // Repositories
+        builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+        builder.Services.AddScoped<ITurbineDataRepository, TurbineDataRepository>();
+        builder.Services.AddScoped<ITurbineRepository, TurbineRepository>();
+        builder.Services.AddScoped<IWindFarmRepository, WindFarmRepository>();
 
         // Auto Mapper configuration
         builder.Services.AddAutoMapper(typeof(Program).Assembly);

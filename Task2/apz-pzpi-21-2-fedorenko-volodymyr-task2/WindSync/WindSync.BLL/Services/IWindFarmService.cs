@@ -1,5 +1,4 @@
 ﻿using WindSync.BLL.Dtos;
-using WindSync.Core.Models;
 
 namespace WindSync.BLL.Services;
 
