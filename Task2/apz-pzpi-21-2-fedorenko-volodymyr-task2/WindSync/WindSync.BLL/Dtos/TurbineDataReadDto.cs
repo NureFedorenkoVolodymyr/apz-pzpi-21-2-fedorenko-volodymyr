@@ -1,6 +1,6 @@
-﻿namespace WindSync.Core.Models;
+﻿namespace WindSync.BLL.Dtos;
 
-public class TurbineData
+public class TurbineDataReadDto
 {
     public int Id { get; set; }
     public DateTime DateTime { get; set; }
@@ -9,7 +9,6 @@ public class TurbineData
     public double AirPressure { get; set; }
     public double AirDensity { get; set; }
     public double RatedPower { get; set; }
-    public double PowerOutput {  get; set; }
+    public double PowerOutput { get; set; }
     public int TurbineId { get; set; }
-    public Turbine? Turbine { get; set; }
 }

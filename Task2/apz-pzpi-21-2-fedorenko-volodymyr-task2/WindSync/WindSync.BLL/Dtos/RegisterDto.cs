@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WindSync.BLL.Dtos;
+﻿namespace WindSync.BLL.Dtos;
 
 public class RegisterDto
 {

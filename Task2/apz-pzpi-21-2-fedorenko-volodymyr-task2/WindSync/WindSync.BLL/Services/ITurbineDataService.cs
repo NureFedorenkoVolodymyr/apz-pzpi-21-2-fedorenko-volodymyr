@@ -4,6 +4,6 @@ namespace WindSync.BLL.Services;
 
 public interface ITurbineDataService
 {
-    Task<bool> AddDataAsync(TurbineDataDto data);
+    Task<bool> AddDataAsync(TurbineDataAddDto data);
     Task<bool> DeleteDataAsync(int dataId);
 }

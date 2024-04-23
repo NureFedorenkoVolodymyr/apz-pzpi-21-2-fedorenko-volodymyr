@@ -51,15 +51,15 @@ public class TurbineService : ITurbineService
         return await _turbineRepository.ChangeTurbineStatusAsync(turbineId, status);
     }
 
-    public async Task<List<TurbineDataDto>> GetTurbineDataHistoricalAsync(int turbineId, DateTime start, DateTime end)
+    public async Task<List<TurbineDataReadDto>> GetTurbineDataHistoricalAsync(int turbineId, DateTime start, DateTime end)
     {
         var turbineData = await _turbineRepository.GetTurbineDataHistoricalAsync(turbineId, start, end);
-        return _mapper.Map<List<TurbineDataDto>>(turbineData);
+        return _mapper.Map<List<TurbineDataReadDto>>(turbineData);
     }
 
-    public async Task<TurbineDataDto> GetMostRecentTurbineDataAsync(int turbineId)
+    public async Task<TurbineDataReadDto> GetMostRecentTurbineDataAsync(int turbineId)
     {
         var turbineData = await _turbineRepository.GetMostRecentTurbineDataAsync(turbineId);
-        return _mapper.Map<TurbineDataDto>(turbineData);
+        return _mapper.Map<TurbineDataReadDto>(turbineData);
     }
 }
