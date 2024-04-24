@@ -32,7 +32,6 @@ public class TurbineService : ITurbineService
     public async Task<int> AddTurbineAsync(TurbineDto turbineDto)
     {
         var turbine = _mapper.Map<Turbine>(turbineDto);
-        turbine.SweptArea = Math.Pow(turbine.TurbineRadius, 2) * Math.PI;
         turbine.Status = TurbineStatus.Idle;
         return await _turbineRepository.AddTurbineAsync(turbine);
     }
@@ -40,7 +39,6 @@ public class TurbineService : ITurbineService
     public async Task<bool> UpdateTurbineAsync(TurbineDto turbineDto)
     {
         var turbine = _mapper.Map<Turbine>(turbineDto);
-        turbine.SweptArea = Math.Pow(turbine.TurbineRadius, 2) * Math.PI;
         return await _turbineRepository.UpdateTurbineAsync(turbine);
     }
 

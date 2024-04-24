@@ -11,6 +11,17 @@ public class TurbineMappingProfile : Profile
     {
         CreateMap<TurbineAddViewModel, TurbineDto>();
         CreateMap<TurbineDto, TurbineReadViewModel>();
-        CreateMap<Turbine, TurbineDto>().ReverseMap();
+        CreateMap<TurbineDto, Turbine>()
+                .ForMember(dest => dest.SweptArea, opt => opt.MapFrom<SweptAreaResolver>());
+        CreateMap<Turbine, TurbineDto>();
+    }
+}
+
+public class SweptAreaResolver : IValueResolver<TurbineDto, Turbine, double>
+{
+    public double Resolve(TurbineDto source, Turbine destination, double destMember, ResolutionContext context)
+    {
+        double sweptArea = Math.Pow(source.TurbineRadius, 2) * Math.PI;
+        return sweptArea;
     }
 }
