@@ -35,6 +35,9 @@ public static class Configuration
         builder.Services.AddScoped<ITurbineService, TurbineService>();
         builder.Services.AddScoped<IWindFarmService, WindFarmService>();
 
+        // Helpers
+        builder.Services.AddScoped<ITurbineDataHelper, TurbineDataHelper>();
+
         // Repositories
         builder.Services.AddScoped<IAlertRepository, AlertRepository>();
         builder.Services.AddScoped<ITurbineDataRepository, TurbineDataRepository>();

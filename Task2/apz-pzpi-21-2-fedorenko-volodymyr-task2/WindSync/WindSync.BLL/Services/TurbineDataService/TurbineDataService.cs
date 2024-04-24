@@ -13,19 +13,19 @@ public class TurbineDataService : ITurbineDataService
 {
     private readonly ITurbineDataRepository _turbineDataRepository;
     private readonly ITurbineRepository _turbineRepository;
-    private readonly IAlertService _alertService;
+    private readonly ITurbineDataHelper _turbineDataHelper;
     private readonly IMapper _mapper;
 
     public TurbineDataService(
         ITurbineDataRepository repository,
         ITurbineRepository turbineDataRepository,
-        IAlertService alertService,
+        ITurbineDataHelper turbineDataHelper,
         IMapper mapper
         )
     {
         _turbineDataRepository = repository;
         _turbineRepository = turbineDataRepository;
-        _alertService = alertService;
+        _turbineDataHelper = turbineDataHelper;
         _mapper = mapper;
     }
 
@@ -37,7 +37,12 @@ public class TurbineDataService : ITurbineDataService
 
         // Calculate air pressure (P)
         // Formula: P = P0 * e ^ ((-u * g * h) / (R * T))
-        // 
+        // P0 - sea level air pressure
+        // u - molar mass of air
+        // g - acceleration of gravity
+        // h - altitude
+        // R - universal gas constant
+        // T - air temperature
         model.AirPressure = Constants.SeaLevelPressure * Math.Exp(-Constants.MolarMassOfAir * Constants.AccelerationOfGravity * turbine.Altitude / (Constants.UniversalGasConstant * model.AirTemperature));
 
         // Calculate air density (p)
@@ -53,9 +58,10 @@ public class TurbineDataService : ITurbineDataService
         // A - swept area
         // V - wind speed
         var currentWindSpeed = model.WindSpeed;
-        if (IsBelowCutInWindSpeed(turbine, model.WindSpeed) || IsShutDownWindSpeed(turbine, model.WindSpeed))
+        if (_turbineDataHelper.IsBelowCutInWindSpeed(turbine, model.WindSpeed)
+            || _turbineDataHelper.IsShutDownWindSpeed(turbine, model.WindSpeed))
             currentWindSpeed = 0;
-        else if (IsRatedWindSpeed(turbine, model.WindSpeed))
+        else if (_turbineDataHelper.IsRatedWindSpeed(turbine, model.WindSpeed))
             currentWindSpeed = turbine.RatedWindSpeed;
 
         model.RatedPower = model.AirDensity * turbine.SweptArea * Math.Pow(currentWindSpeed, 3) / 2 * turbine.Efficiency;
@@ -63,9 +69,10 @@ public class TurbineDataService : ITurbineDataService
         if(recentData is not null)
         {
             var recentWindSpeed = recentData.WindSpeed;
-            if (IsBelowCutInWindSpeed(turbine, recentData.WindSpeed) || IsShutDownWindSpeed(turbine, recentData.WindSpeed))
+            if (_turbineDataHelper.IsBelowCutInWindSpeed(turbine, recentData.WindSpeed)
+                || _turbineDataHelper.IsShutDownWindSpeed(turbine, recentData.WindSpeed))
                 recentWindSpeed = 0;
-            else if (IsRatedWindSpeed(turbine, recentData.WindSpeed))
+            else if (_turbineDataHelper.IsRatedWindSpeed(turbine, recentData.WindSpeed))
                 recentWindSpeed = turbine.RatedWindSpeed;
 
             var avgAirDensity = (model.AirDensity + recentData.AirDensity) / 2;
@@ -85,156 +92,13 @@ public class TurbineDataService : ITurbineDataService
             return TurbineStatus.None;
 
         if(recentData is null)
-            return await UpdateTurbineStatusNewAsync(turbine, model);
+            return await _turbineDataHelper.UpdateTurbineStatusNewAsync(turbine, model);
 
-        return await UpdateTurbineStatusAsync(turbine, model, recentData);
+        return await _turbineDataHelper.UpdateTurbineStatusAsync(turbine, model, recentData);
     }
 
     public async Task<bool> DeleteDataAsync(int dataId)
     {
         return await _turbineDataRepository.DeleteDataAsync(dataId);
-    }
-
-    private async Task<TurbineStatus> UpdateTurbineStatusNewAsync(Turbine turbine, TurbineData currentData)
-    {
-        var resultStatus = turbine.Status;
-
-        if (turbine.Status != TurbineStatus.Operational && turbine.Status != TurbineStatus.Idle)
-            return resultStatus;
-
-        if (IsBelowCutInWindSpeed(turbine, currentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Idle);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Idle;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is below cut-in speed. Turbine status is changed to Idle.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-            }
-        }
-        else if (IsShutDownWindSpeed(turbine, currentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Idle);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Idle;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is greater than shutdown speed. Turbine status is changed to Idle.",
-                    AlertStatus.Warning,
-                    turbine.WindFarm.UserId);
-            }
-        }
-        else if (IsCutInWindSpeed(turbine, currentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Operational);
-
-            if(result)
-            {
-                resultStatus = TurbineStatus.Operational;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is in cut-in speed. Turbine status is unchanged.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-            }
-        }
-        else if (IsRatedWindSpeed(turbine, currentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Operational);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Operational;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is in rated speed. Turbine status is unchanged. Turbine power output is restricted.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-            }
-        }
-
-        return resultStatus;
-    }
-
-    private async Task<TurbineStatus> UpdateTurbineStatusAsync(Turbine turbine, TurbineData currentData, TurbineData recentData)
-    {
-        var resultStatus = turbine.Status;
-
-        if (turbine.Status != TurbineStatus.Operational && turbine.Status != TurbineStatus.Idle)
-            return resultStatus;
-
-        if (IsBelowCutInWindSpeed(turbine, currentData.WindSpeed)
-            && !IsBelowCutInWindSpeed(turbine, recentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Idle);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Idle;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is below cut-in speed. Turbine status is changed to Idle.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-            }
-        }
-        else if (IsShutDownWindSpeed(turbine, currentData.WindSpeed)
-            && !IsShutDownWindSpeed(turbine, recentData.WindSpeed))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Idle);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Idle;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is greater than shutdown speed. Turbine status is changed to Idle.",
-                    AlertStatus.Warning,
-                    turbine.WindFarm.UserId);
-            }
-        }
-        else if (IsCutInWindSpeed(turbine, currentData.WindSpeed)
-            && IsRatedWindSpeed(turbine, recentData.WindSpeed))
-        {
-            await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is in cut-in speed. Turbine status is unchanged.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-        }
-        else if (IsRatedWindSpeed(turbine, currentData.WindSpeed)
-            && IsCutInWindSpeed(turbine, recentData.WindSpeed))
-        {
-            await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is in rated speed. Turbine status is unchanged. Turbine power output is restricted.",
-                    AlertStatus.Informational,
-                    turbine.WindFarm.UserId);
-        }
-        else if ((IsCutInWindSpeed(turbine, currentData.WindSpeed) || IsRatedWindSpeed(turbine, currentData.WindSpeed))
-            && (IsBelowCutInWindSpeed(turbine, recentData.WindSpeed) || IsShutDownWindSpeed(turbine, recentData.WindSpeed)))
-        {
-            var result = await _turbineRepository.ChangeTurbineStatusAsync(turbine.Id, TurbineStatus.Operational);
-
-            if (result)
-            {
-                resultStatus = TurbineStatus.Operational;
-                await SendAlert($"Turbine: {turbine.Id}\nWindFarm: {turbine.WindFarmId}\nSpeed of wind is in cut-in/rated speed. Turbine status is changed from Idle to Operational.",
-                    AlertStatus.Resolved,
-                    turbine.WindFarm.UserId);
-            }
-        }
-
-        return resultStatus;
-    }
-
-    private bool IsBelowCutInWindSpeed(Turbine turbine, double windSpeed) => windSpeed < turbine.CutInWindSpeed;
-
-    private bool IsCutInWindSpeed(Turbine turbine, double windSpeed) => windSpeed >= turbine.CutInWindSpeed && windSpeed < turbine.RatedWindSpeed;
-
-    private bool IsRatedWindSpeed(Turbine turbine, double windSpeed) => windSpeed >= turbine.RatedWindSpeed && windSpeed < turbine.ShutDownWindSpeed;
-
-    private bool IsShutDownWindSpeed(Turbine turbine, double windSpeed) => windSpeed >= turbine.ShutDownWindSpeed;
-
-    private async Task SendAlert(string message, AlertStatus status, string userId)
-    {
-        var alert = new AlertDto()
-        {
-            Message = message,
-            DateTime = DateTime.UtcNow,
-            Status = status,
-            UserId = userId,
-        };
-        await _alertService.AddAlertAsync(alert);
     }
 }
