@@ -1,13 +1,10 @@
 ﻿using WindSync.Core.Enums;
 
-namespace WindSync.Core.Models;
+namespace WindSync.PL.ViewModels.Turbine;
 
-public class Turbine
+public class TurbineAddViewModel
 {
-    public int Id { get; set; }
-    public TurbineStatus Status { get; set; }
     public double TurbineRadius { get; set; }
-    public double SweptArea { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public double Altitude { get; set; }
@@ -16,6 +13,4 @@ public class Turbine
     public int RatedWindSpeed { get; set; }
     public int ShutDownWindSpeed { get; set; }
     public int WindFarmId { get; set; }
-    public WindFarm? WindFarm { get; set; }
-    public ICollection<TurbineData> TurbineData { get; set; } = new List<TurbineData>();
 }

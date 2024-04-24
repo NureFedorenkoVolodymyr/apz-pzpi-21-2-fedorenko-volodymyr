@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using WindSync.BLL.Dtos;
-using WindSync.BLL.Services;
-using WindSync.PL.ViewModels;
+using WindSync.BLL.Services.Auth;
+using WindSync.PL.ViewModels.Auth;
 
 namespace WindSync.PL.Controllers
 {

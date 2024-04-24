@@ -4,12 +4,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using WindSync.BLL.Services;
+using WindSync.BLL.Services.AlertService;
+using WindSync.BLL.Services.Auth;
+using WindSync.BLL.Services.TurbineDataService;
+using WindSync.BLL.Services.TurbineService;
+using WindSync.BLL.Services.WindFarmService;
 using WindSync.BLL.Utils;
 using WindSync.Core.Models;
 using WindSync.Core.Utils;
 using WindSync.DAL.DB;
-using WindSync.DAL.Repositories;
+using WindSync.DAL.Repositories.AlertRepository;
+using WindSync.DAL.Repositories.TurbineDataRepository;
+using WindSync.DAL.Repositories.TurbineRepository;
+using WindSync.DAL.Repositories.WindFarmRepository;
 
 namespace WindSync.PL.Configuration;
 

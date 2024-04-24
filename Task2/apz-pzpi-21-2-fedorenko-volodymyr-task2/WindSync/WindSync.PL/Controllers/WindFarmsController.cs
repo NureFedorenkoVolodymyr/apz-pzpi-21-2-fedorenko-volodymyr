@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using WindSync.BLL.Dtos;
-using WindSync.BLL.Services;
-using WindSync.PL.ViewModels;
+using WindSync.BLL.Services.WindFarmService;
+using WindSync.PL.ViewModels.Turbine;
+using WindSync.PL.ViewModels.WindFarm;
 
 namespace WindSync.PL.Controllers
 {
@@ -24,47 +23,57 @@ namespace WindSync.PL.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<ActionResult<List<WindFarmViewModel>>> GetFarmsByUserAsync()
+        public async Task<ActionResult<List<WindFarmReadViewModel>>> GetFarmsByUserAsync()
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
 
             var farmsDto = await _windFarmService.GetFarmsByUserAsync(userId);
-            var farmsViewModel = _mapper.Map<List<WindFarmViewModel>>(farmsDto);
+            var farmsViewModel = _mapper.Map<List<WindFarmReadViewModel>>(farmsDto);
 
             return Ok(farmsViewModel);
         }
 
-        [HttpGet("{farmId}")]
-        public async Task<ActionResult<WindFarmViewModel>> GetFarmByIdAsync([FromRoute] int farmId)
+        [Authorize]
+        [HttpGet("{farmId}", Name = nameof(GetFarmByIdAsync))]
+        public async Task<ActionResult<WindFarmReadViewModel>> GetFarmByIdAsync([FromRoute] int farmId)
         {
             var farmDto = await _windFarmService.GetFarmByIdAsync(farmId);
             if (farmDto is null)
                 return NotFound();
 
-            var farmViewModel = _mapper.Map<WindFarmViewModel>(farmDto);
+            var farmViewModel = _mapper.Map<WindFarmReadViewModel>(farmDto);
             return Ok(farmViewModel);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult> AddFarmAsync([FromBody] WindFarmViewModel farmViewModel)
+        public async Task<ActionResult> AddFarmAsync([FromBody] WindFarmAddViewModel farmViewModel)
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
 
             var farmDto = _mapper.Map<WindFarmDto>(farmViewModel);
             farmDto.UserId = userId;
 
-            var result = await _windFarmService.AddFarmAsync(farmDto);
-            if (!result)
+            var farmId = await _windFarmService.AddFarmAsync(farmDto);
+            if (farmId == 0)
                 return BadRequest();
 
-            return Ok();
+            farmDto = await _windFarmService.GetFarmByIdAsync(farmId);
+            var farmReadViewModel = _mapper.Map<WindFarmReadViewModel>(farmDto);
+
+            return CreatedAtRoute(nameof(GetFarmByIdAsync), new { farmId }, farmViewModel);
         }
 
+        [Authorize]
         [HttpPut("{farmId}")]
-        public async Task<ActionResult> UpdateFarmAsync([FromRoute] int farmId, [FromBody] WindFarmViewModel farmViewModel)
+        public async Task<ActionResult> UpdateFarmAsync([FromRoute] int farmId, [FromBody] WindFarmReadViewModel farmViewModel)
         {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            if(userId != farmViewModel.UserId)
+                return Forbid();
+
             var farmDto = _mapper.Map<WindFarmDto>(farmViewModel);
+            farmDto.Id = farmId;
 
             var result = await _windFarmService.UpdateFarmAsync(farmDto);
             if (!result)
@@ -73,9 +82,15 @@ namespace WindSync.PL.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete("{farmId}")]
         public async Task<ActionResult> DeleteFarmAsync([FromRoute] int farmId)
         {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+            var farm = await _windFarmService.GetFarmByIdAsync(farmId);
+            if (userId != farm.UserId)
+                return Forbid();
+
             var result = await _windFarmService.DeleteFarmAsync(farmId);
             if (!result)
                 return BadRequest();
@@ -83,11 +98,12 @@ namespace WindSync.PL.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("{farmId}/turbines")]
-        public async Task<ActionResult<List<TurbineViewModel>>> GetTurbinesByFarmAsync(int farmId)
+        public async Task<ActionResult<List<TurbineReadViewModel>>> GetTurbinesByFarmAsync(int farmId)
         {
             var turbinesDto = await _windFarmService.GetTurbinesByFarmAsync(farmId);
-            var turbinesViewModel = _mapper.Map<List<TurbineViewModel>>(turbinesDto);
+            var turbinesViewModel = _mapper.Map<List<TurbineReadViewModel>>(turbinesDto);
 
             return Ok(turbinesViewModel);
         }

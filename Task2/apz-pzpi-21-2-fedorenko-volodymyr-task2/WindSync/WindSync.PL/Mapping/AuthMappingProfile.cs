@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using WindSync.BLL.Dtos;
-using WindSync.PL.ViewModels;
+using WindSync.PL.ViewModels.Auth;
 
 namespace WindSync.PL.Mapping;
 

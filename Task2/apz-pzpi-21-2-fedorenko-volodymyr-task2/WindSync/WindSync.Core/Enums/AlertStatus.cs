@@ -2,7 +2,7 @@
 
 public enum AlertStatus{
     None,
-    Informatinal,
+    Informational,
     Warning,
     Critical,
     Resolved,

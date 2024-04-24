@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using WindSync.BLL.Services;
+using WindSync.BLL.Services.Auth;
 
 namespace WindSync.PL.Middleware;
 
