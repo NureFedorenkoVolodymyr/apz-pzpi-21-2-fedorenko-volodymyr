@@ -17,6 +17,12 @@ public class TurbineService : ITurbineService
         _mapper = mapper;
     }
 
+    public async Task<List<TurbineDto>> GetTurbinesAsync()
+    {
+        var turbines = await _turbineRepository.GetTurbinesAsync();
+        return _mapper.Map<List<TurbineDto>>(turbines);
+    }
+
     public async Task<List<TurbineDto>> GetTurbinesByUserAsync(string userId)
     {
         var turbines = await _turbineRepository.GetTurbinesByUserAsync(userId);

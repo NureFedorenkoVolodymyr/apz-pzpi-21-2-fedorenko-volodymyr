@@ -24,6 +24,15 @@ namespace WindSync.PL.Controllers
 
         [Authorize]
         [HttpGet]
+        public async Task<ActionResult<List<TurbineReadViewModel>>> GetTurbinesAsync()
+        {
+            var turbinesDto = await _turbineService.GetTurbinesAsync();
+            var turbinesViewModel = _mapper.Map<List<TurbineReadViewModel>>(turbinesDto);
+            return Ok(turbinesViewModel);
+        }
+
+        [Authorize]
+        [HttpGet("my")]
         public async Task<ActionResult<List<TurbineReadViewModel>>> GetTurbinesByUserAsync()
         {
             var userId = HttpContext.Items["UserId"]?.ToString();

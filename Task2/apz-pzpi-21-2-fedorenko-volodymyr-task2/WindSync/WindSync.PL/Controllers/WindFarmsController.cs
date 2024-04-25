@@ -23,6 +23,16 @@ namespace WindSync.PL.Controllers
 
         [Authorize]
         [HttpGet]
+        public async Task<ActionResult<List<WindFarmReadViewModel>>> GetFarmsAsync()
+        {
+            var farmsDto = await _windFarmService.GetFarmsAsync();
+            var farmsViewModel = _mapper.Map<List<WindFarmReadViewModel>>(farmsDto);
+
+            return Ok(farmsViewModel);
+        }
+
+        [Authorize]
+        [HttpGet("my")]
         public async Task<ActionResult<List<WindFarmReadViewModel>>> GetFarmsByUserAsync()
         {
             var userId = HttpContext.Items["UserId"]?.ToString();

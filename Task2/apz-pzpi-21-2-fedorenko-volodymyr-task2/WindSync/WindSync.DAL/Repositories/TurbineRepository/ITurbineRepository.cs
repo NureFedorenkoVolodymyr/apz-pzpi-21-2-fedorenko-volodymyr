@@ -5,6 +5,7 @@ namespace WindSync.DAL.Repositories.TurbineRepository;
 
 public interface ITurbineRepository
 {
+    Task<List<Turbine>> GetTurbinesAsync();
     Task<List<Turbine>> GetTurbinesByUserAsync(string usedId);
     Task<Turbine> GetTurbineByIdAsync(int turbineId);
     Task<int> AddTurbineAsync(Turbine turbine);

@@ -13,6 +13,12 @@ public class WindFarmRepository : IWindFarmRepository
         _dbContext = dbContext;
     }
 
+    public async Task<List<WindFarm>> GetFarmsAsync()
+    {
+        return await _dbContext.WindFarms
+            .ToListAsync();
+    }
+
     public async Task<List<WindFarm>> GetFarmsByUserAsync(string userId)
     {
         return await _dbContext.WindFarms

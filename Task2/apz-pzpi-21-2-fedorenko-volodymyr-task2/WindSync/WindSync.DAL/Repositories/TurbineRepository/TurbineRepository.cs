@@ -14,6 +14,13 @@ public class TurbineRepository : ITurbineRepository
         _dbContext = dbContext;
     }
 
+    public async Task<List<Turbine>> GetTurbinesAsync()
+    {
+        return await _dbContext.Turbines
+            .Include(t => t.WindFarm)
+            .ToListAsync();
+    }
+
     public async Task<List<Turbine>> GetTurbinesByUserAsync(string userId)
     {
         return await _dbContext.Turbines

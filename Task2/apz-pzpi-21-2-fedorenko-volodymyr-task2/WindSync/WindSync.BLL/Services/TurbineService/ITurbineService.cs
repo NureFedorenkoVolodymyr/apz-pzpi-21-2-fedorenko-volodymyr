@@ -5,6 +5,7 @@ namespace WindSync.BLL.Services.TurbineService;
 
 public interface ITurbineService
 {
+    Task<List<TurbineDto>> GetTurbinesAsync();
     Task<List<TurbineDto>> GetTurbinesByUserAsync(string usedId);
     Task<TurbineDto> GetTurbineByIdAsync(int turbineId);
     Task<int> AddTurbineAsync(TurbineDto turbine);

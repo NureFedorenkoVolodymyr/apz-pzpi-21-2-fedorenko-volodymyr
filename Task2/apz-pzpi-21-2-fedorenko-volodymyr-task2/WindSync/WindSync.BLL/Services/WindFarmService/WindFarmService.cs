@@ -16,6 +16,12 @@ public class WindFarmService : IWindFarmService
         _mapper = mapper;
     }
 
+    public async Task<List<WindFarmDto>> GetFarmsAsync()
+    {
+        var farms = await _windFarmRepository.GetFarmsAsync();
+        return _mapper.Map<List<WindFarmDto>>(farms);
+    }
+
     public async Task<List<WindFarmDto>> GetFarmsByUserAsync(string userId)
     {
         var farms = await _windFarmRepository.GetFarmsByUserAsync(userId);

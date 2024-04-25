@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using WindSync.BLL.Dtos;
-using WindSync.BLL.Services.AlertService;
 using WindSync.Core.Enums;
 using WindSync.Core.Models;
 using WindSync.Core.Utils;

@@ -4,6 +4,7 @@ namespace WindSync.BLL.Services.WindFarmService;
 
 public interface IWindFarmService
 {
+    Task<List<WindFarmDto>> GetFarmsAsync();
     Task<List<WindFarmDto>> GetFarmsByUserAsync(string userId);
     Task<WindFarmDto> GetFarmByIdAsync(int farmId);
     Task<int> AddFarmAsync(WindFarmDto farm);
