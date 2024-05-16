@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "author": "Володимир Федоренко",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": { "env": "micropython-20231227-v1.22.0" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -18.9, "left": 157.8, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:3V3", "dht1:VCC", "red", [ "h-43.01", "v220.8", "h211.2" ] ],
+    [ "esp:15", "dht1:SDA", "green", [ "h81.64", "v-76.8" ] ],
+    [ "esp:GND.1", "dht1:GND", "black", [ "h-23.81", "v67.2", "h220.8" ] ]
+  ],
+  "dependencies": {}
+}
