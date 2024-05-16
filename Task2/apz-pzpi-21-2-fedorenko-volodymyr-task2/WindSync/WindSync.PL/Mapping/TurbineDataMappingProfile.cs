@@ -9,7 +9,8 @@ public class TurbineDataMappingProfile : Profile
 {
     public TurbineDataMappingProfile()
     {
-        CreateMap<TurbineDataAddViewModel, TurbineDataDto>();
+        CreateMap<TurbineDataAddViewModel, TurbineDataDto>()
+            .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => DateTime.UtcNow));
         CreateMap<TurbineDataDto, TurbineDataReadViewModel>();
         CreateMap<TurbineDataDto, TurbineData>().ReverseMap();
     }
