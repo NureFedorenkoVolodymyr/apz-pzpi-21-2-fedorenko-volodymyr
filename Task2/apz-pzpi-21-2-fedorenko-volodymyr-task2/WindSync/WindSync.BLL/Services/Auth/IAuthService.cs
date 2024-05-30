@@ -10,4 +10,7 @@ public interface IAuthService
     Task<bool> RegisterAsync(RegisterDto model);
     Task<bool> RegisterAdminAsync(RegisterDto model);
     Task<User> GetUserByUsernameAsync(string username);
+    Task<IList<User>> GetAdmins();
+    Task<IList<User>> GetUsers();
+    Task DeleteUser(string id);
 }

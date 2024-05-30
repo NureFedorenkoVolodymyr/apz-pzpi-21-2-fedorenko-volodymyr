@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using WindSync.BLL.Dtos;
 using WindSync.BLL.Services.Auth;
+using WindSync.Core.Models;
 using WindSync.PL.ViewModels.Auth;
 
 namespace WindSync.PL.Controllers
@@ -50,11 +51,13 @@ namespace WindSync.PL.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("register-admin")]
         public async Task<ActionResult> RegisterAdmin([FromBody] RegisterViewModel model)
         {
             var registerDto = _mapper.Map<RegisterDto>(model);
-            var registerResult = await _authService.RegisterAsync(registerDto);
+            var registerResult = await _authService.RegisterAdminAsync(registerDto);
 
             if (!registerResult)
                 return BadRequest();
@@ -64,13 +67,49 @@ namespace WindSync.PL.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("roles")]
-        public async Task<ActionResult> GetRoles()
+        public async Task<ActionResult> GetUserInfo()
         {
             var roles = HttpContext.User.Claims
                 .Where(c => c.Type == ClaimTypes.Role)
                 .Select(c => c.Value);
-            return Ok(roles);
+
+            var username = HttpContext.User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            return Ok(new {
+                username = username,
+                roles = roles
+            });
+        }
+
+        [Authorize]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("admins")]
+        public async Task<ActionResult<IList<User>>> GetAdmins()
+        {
+            var admins = await _authService.GetAdmins();
+            return Ok(admins);
+        }
+
+        [Authorize]
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("users")]
+        public async Task<ActionResult<IList<User>>> GetUsers()
+        {
+            var admins = await _authService.GetUsers();
+            return Ok(admins);
+        }
+
+        [Authorize]
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("users/{userId}")]
+        public async Task<ActionResult<IList<User>>> DeleteUser(string userId)
+        {
+            await _authService.DeleteUser(userId);
+            return Ok();
         }
 
         [Authorize]

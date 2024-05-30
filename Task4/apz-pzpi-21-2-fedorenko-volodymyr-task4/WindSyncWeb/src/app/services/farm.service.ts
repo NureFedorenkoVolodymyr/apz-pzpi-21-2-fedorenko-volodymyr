@@ -13,6 +13,10 @@ export class FarmService {
   
   private http = inject(HttpClient);
 
+  getAll() {
+    return this.http.get<FarmReadViewModel[]>(`${this.apiUrl}`);
+  }
+
   getMy() {
     return this.http.get<FarmReadViewModel[]>(`${this.apiUrl}/my`);
   }

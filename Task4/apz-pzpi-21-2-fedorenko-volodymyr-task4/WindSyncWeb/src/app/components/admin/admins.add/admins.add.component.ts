@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../../services/auth.service';
-import { LoginViewModel } from '../../../../assets/models/login.viewmodel';
 import { Router } from '@angular/router';
+import { RegisterViewModel } from '../../../../assets/models/register.viewmodel';
+
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-admins.add',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -18,31 +19,32 @@ import { Router } from '@angular/router';
     MatButtonModule,
     MatCardModule
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './admins.add.component.html',
+  styleUrl: './admins.add.component.scss'
 })
-export class LoginComponent  {
+export class AdminsAddComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  loginForm = this.fb.group({
+  registerForm = this.fb.group({
+    username: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]]
   });
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const loginModel = this.loginForm.value as LoginViewModel;
+    if (this.registerForm.valid) {
+      const registerModel = this.registerForm.value as RegisterViewModel;
 
-      this.authService.login(loginModel).subscribe(
+      this.authService.registerAdmin(registerModel).subscribe(
         response => {
-          console.log('Login successful', response);
-          this.authService.setToken(response);
-          this.router.navigate(['']);
+          console.log('Register admin successful', response);
+
+          this.router.navigate(['admin', 'admins']);
         },
         error => {
-          console.error('Login failed', error);
+          console.error('Register admin failed', error);
         }
       );
     }

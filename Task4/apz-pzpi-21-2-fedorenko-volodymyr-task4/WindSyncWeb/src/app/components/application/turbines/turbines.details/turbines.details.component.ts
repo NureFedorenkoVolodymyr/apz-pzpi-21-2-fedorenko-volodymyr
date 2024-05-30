@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { TurbineReadViewModel } from '../../../../../assets/models/turbine.read.viewmodel';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, NgIf } from '@angular/common';
 import {
   NgApexchartsModule,
   ChartComponent,
@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { TurbinesDeleteComponent } from '../turbines.delete/turbines.delete.component';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-turbines-details',
@@ -26,13 +27,15 @@ import { TurbinesDeleteComponent } from '../turbines.delete/turbines.delete.comp
   imports: [
     JsonPipe,
     NgApexchartsModule,
-    MatButtonModule
+    MatButtonModule,
+    NgIf
   ],
   templateUrl: './turbines.details.component.html',
   styleUrl: './turbines.details.component.scss'
 })
 export class TurbinesDetailsComponent implements OnInit {
   private turbineService = inject(TurbineService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
 
@@ -42,9 +45,13 @@ export class TurbinesDetailsComponent implements OnInit {
   @ViewChild("chart") chart!: ChartComponent;
   public chartOptions!: Partial<ChartOptions>;
 
+  isAdmin: boolean = false;
+
   turbineData: TurbineDataReadViewModel[] = [];
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.getIsAdmin();
+
     this.turbineService.getDataHistorical(this.turbine.id, new Date('2024-01-01'), new Date('2024-06-01'))
       .subscribe(result => {
         this.turbineData = result.sort((a, b) =>{

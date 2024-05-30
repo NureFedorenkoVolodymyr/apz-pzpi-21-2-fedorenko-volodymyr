@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WindSync.BLL.Dtos;
 using WindSync.BLL.Services.WindFarmService;
 using WindSync.PL.ViewModels.Turbine;
@@ -22,6 +23,7 @@ namespace WindSync.PL.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<WindFarmReadViewModel>>> GetFarmsAsync()
         {
@@ -97,8 +99,13 @@ namespace WindSync.PL.Controllers
         public async Task<ActionResult> DeleteFarmAsync([FromRoute] int farmId)
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
+            var roles = HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value);
+            var isAdmin = roles.Contains("Admin");
+
             var farm = await _windFarmService.GetFarmByIdAsync(farmId);
-            if (userId != farm.UserId)
+            if (userId != farm.UserId && !isAdmin)
                 return Forbid();
 
             var result = await _windFarmService.DeleteFarmAsync(farmId);

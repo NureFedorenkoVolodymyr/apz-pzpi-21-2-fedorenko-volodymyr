@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FarmService } from '../../../../services/farm.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FarmReadViewModel } from '../../../../../assets/models/farm.read.viewmodel';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe, NgIf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { TurbineReadViewModel } from '../../../../../assets/models/turbine.read.viewmodel';
@@ -17,6 +17,7 @@ import { TurbineService } from '../../../../services/turbine.service';
 import { TurbineDataReadViewModel } from '../../../../../assets/models/turbine.data.read.viewmodel';
 import { forkJoin } from 'rxjs';
 import {MatDividerModule} from '@angular/material/divider';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-farms.details',
@@ -29,7 +30,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatIconModule,
     CommonModule,
     TurbinesDetailsComponent,
-    MatDividerModule
+    MatDividerModule,
+    NgIf
   ],
   templateUrl: './farms.details.component.html',
   animations: [
@@ -43,10 +45,13 @@ import {MatDividerModule} from '@angular/material/divider';
 })
 export class FarmsDetailsComponent implements OnInit {
   private farmService = inject(FarmService);
+  private authService = inject(AuthService);
   private turbineService = inject(TurbineService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
+
+  isAdmin: boolean = false;
 
   farmId!: number;
   farm!: FarmReadViewModel;
@@ -79,6 +84,8 @@ export class FarmsDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.farmId = this.route.snapshot.params['farm-id'] as number;
+
+    this.isAdmin = this.authService.getIsAdmin();
 
     this.farmService.getById(this.farmId)
       .subscribe(result => {

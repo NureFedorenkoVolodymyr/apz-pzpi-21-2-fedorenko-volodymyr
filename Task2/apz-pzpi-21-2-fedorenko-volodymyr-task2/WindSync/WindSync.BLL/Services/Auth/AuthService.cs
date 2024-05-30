@@ -115,6 +115,22 @@ public class AuthService : IAuthService
         return await _userManager.FindByNameAsync(username);
     }
 
+    public async Task<IList<User>> GetAdmins()
+    {
+        return await _userManager.GetUsersInRoleAsync("Admin");
+    }
+
+    public async Task<IList<User>> GetUsers()
+    {
+        return await _userManager.GetUsersInRoleAsync("User");
+    }
+
+    public async Task DeleteUser(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        await _userManager.DeleteAsync(user);
+    }
+
     private JwtSecurityToken GetToken(List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));

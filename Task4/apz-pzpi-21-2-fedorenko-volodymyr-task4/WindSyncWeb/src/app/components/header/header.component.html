@@ -5,18 +5,22 @@
     </div>
     <button mat-button routerLink="/farms">WindFarms</button>
     <button mat-button routerLink="/turbines">Turbines</button>
+    @if(isAdmin){
+      <button mat-button routerLink="/admin/admins">Admins</button>
+      <button mat-button routerLink="/admin/users">Users</button>
+    }
+
     <span class="spacer"></span>
     @if(isAuthenticated) {
-      <button mat-button [matMenuTriggerFor]="menu">
-        Profile
+      <button mat-raised-button color="accent" [matMenuTriggerFor]="menu">
+        {{username}}
       </button>
       <mat-menu #menu="matMenu">
-        <!-- <button mat-menu-item>Profile</button> -->
         <button mat-menu-item (click)="onLogout()">Logout</button>
       </mat-menu>
     }
     @else {
-      <button mat-button [matMenuTriggerFor]="menu">
+      <button mat-raised-button color="accent" [matMenuTriggerFor]="menu">
         Join
       </button>
       <mat-menu #menu="matMenu">
