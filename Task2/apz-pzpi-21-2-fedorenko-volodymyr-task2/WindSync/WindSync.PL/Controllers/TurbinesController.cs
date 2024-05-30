@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WindSync.BLL.Dtos;
 using WindSync.BLL.Services.TurbineService;
 using WindSync.Core.Enums;
@@ -23,6 +24,7 @@ namespace WindSync.PL.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<List<TurbineReadViewModel>>> GetTurbinesAsync()
         {

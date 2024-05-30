@@ -4,6 +4,7 @@ import { FarmReadViewModel } from '../../../../../assets/models/farm.read.viewmo
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-farms.view',
@@ -18,15 +19,27 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class FarmsViewComponent implements OnInit {
   private farmService = inject(FarmService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   farms: FarmReadViewModel[] = [];
+  isAdmin: boolean = false;
 
   ngOnInit(): void {
-    this.farmService.getMy()
+    this.isAdmin = this.authService.getIsAdmin();
+
+    if(this.isAdmin){
+      this.farmService.getAll()
       .subscribe(result => {
         this.farms = result;
       });
+    }
+    else {
+      this.farmService.getMy()
+      .subscribe(result => {
+        this.farms = result;
+      });
+    }
   }
 
   onFarmDetails(farmId: number){

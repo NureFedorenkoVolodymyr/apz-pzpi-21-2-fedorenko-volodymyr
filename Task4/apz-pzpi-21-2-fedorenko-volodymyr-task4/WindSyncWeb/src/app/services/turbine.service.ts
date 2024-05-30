@@ -12,6 +12,10 @@ export class TurbineService {
   
   private http = inject(HttpClient);
 
+  getAll() {
+    return this.http.get<TurbineReadViewModel[]>(`${this.apiUrl}`);
+  }
+
   getById(id: number) {
     return this.http.get<TurbineReadViewModel>(`${this.apiUrl}/${id}`);
   }

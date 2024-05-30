@@ -1,7 +1,14 @@
-<div class="header">
+@if(!isAdmin){
+  <div class="header">
     <h1>My farms</h1>
     <button mat-raised-button color="accent" routerLink="/farms/add">Add</button>
-</div>
+  </div>
+}
+@else {
+  <div class="header">
+    <h1>Farms</h1>
+  </div>
+}
 
 <div class="farms-container">
     @for(farm of farms; track farm) {

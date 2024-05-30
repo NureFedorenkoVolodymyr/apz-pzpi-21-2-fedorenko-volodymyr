@@ -1,3 +1,5 @@
 export const Constants = {
-    authTokenProperty: 'token'
+    authTokenProperty: 'token',
+    usernameProperty: 'username',
+    isAdminProperty: 'isAdmin'
 };

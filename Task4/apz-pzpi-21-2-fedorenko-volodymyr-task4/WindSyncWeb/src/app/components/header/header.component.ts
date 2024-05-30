@@ -24,11 +24,23 @@ export class HeaderComponent implements OnInit {
   router = inject(Router);
 
   isAuthenticated: boolean = false;
+  isAdmin: boolean = false;
+  username: string = '';
 
   ngOnInit(): void {
     this.authService.isAuthenticatedListener()
       .subscribe(authState => {
         this.isAuthenticated = authState;
+      });
+
+    this.authService.usernameListener()
+      .subscribe(username => {
+        this.username = username;
+      });
+
+    this.authService.isAdminListener()
+      .subscribe(isAdmin => {
+        this.isAdmin = isAdmin;
       });
   }
 

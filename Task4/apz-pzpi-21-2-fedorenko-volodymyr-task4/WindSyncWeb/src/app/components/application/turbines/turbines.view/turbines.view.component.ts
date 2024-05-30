@@ -4,10 +4,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { TurbineService } from '../../../../services/turbine.service';
-import { MatDialog } from '@angular/material/dialog';
 import { TurbineReadViewModel } from '../../../../../assets/models/turbine.read.viewmodel';
 import { TurbinesDetailsComponent } from '../turbines.details/turbines.details.component';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-turbines.view',
@@ -31,7 +31,9 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class TurbinesViewComponent {
   private turbineService = inject(TurbineService);
-  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
+
+  isAdmin: boolean = false;
 
   turbines: TurbineReadViewModel[] = [];
 
@@ -49,9 +51,19 @@ export class TurbinesViewComponent {
   expandedTurbine?: TurbineReadViewModel;
 
   ngOnInit(): void {
-    this.turbineService.getMy()
-      .subscribe(result => {
-        this.turbines = result;
-      });
+    this.isAdmin = this.authService.getIsAdmin();
+
+    if(this.isAdmin){
+      this.turbineService.getAll()
+        .subscribe(result => {
+          this.turbines = result;
+        });
+    }
+    else {
+      this.turbineService.getMy()
+        .subscribe(result => {
+          this.turbines = result;
+        });
+    }
   }
 }
