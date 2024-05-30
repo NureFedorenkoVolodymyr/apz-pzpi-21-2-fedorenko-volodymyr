@@ -40,7 +40,7 @@ export class FarmsDetailsComponent implements OnInit {
   private farmService = inject(FarmService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
 
   farmId?: number;
   farm!: FarmReadViewModel;
@@ -61,7 +61,7 @@ export class FarmsDetailsComponent implements OnInit {
   expandedTurbine?: TurbineReadViewModel;
 
   ngOnInit(): void {
-    this.farmId = this.route.snapshot.params['id'] as number;
+    this.farmId = this.route.snapshot.params['farm-id'] as number;
 
     this.farmService.getById(this.farmId)
       .subscribe(result => {
@@ -72,6 +72,10 @@ export class FarmsDetailsComponent implements OnInit {
       .subscribe(result => {
         this.turbines = result;
       });
+  }
+
+  onAddTurbine() {
+    this.router.navigate(['farms', this.farmId, 'turbines', 'add']);
   }
 
   onFarmUpdate() {

@@ -16,6 +16,9 @@ import { TurbineDataReadViewModel } from '../../../../../assets/models/turbine.d
 import { TurbineService } from '../../../../services/turbine.service';
 import { TurbineStatus } from '../../../../../assets/enums/turbine.status';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { TurbinesDeleteComponent } from '../turbines.delete/turbines.delete.component';
 
 @Component({
   selector: 'app-turbines-details',
@@ -29,7 +32,9 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './turbines.details.component.scss'
 })
 export class TurbinesDetailsComponent implements OnInit {
-  turbineService = inject(TurbineService);
+  private turbineService = inject(TurbineService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
 
   @Input() turbine!: TurbineReadViewModel;
   TurbineStatus = TurbineStatus;
@@ -51,6 +56,24 @@ export class TurbinesDetailsComponent implements OnInit {
       });
         this.updateChart(this.turbineData);
       });
+  }
+
+  onUpdateTurbine() {
+    this.router.navigate(['farms', this.turbine.windFarmId, 'turbines', 'update', this.turbine.id]);
+  }
+
+  onDeleteTurbine(): void {
+    const dialogRef = this.dialog.open(TurbinesDeleteComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.turbineService.delete(this.turbine.id)
+          .subscribe(() => {
+            this.router.navigate(['farms'], { skipLocationChange: true })
+              .then(() => this.router.navigate(['farms', this.turbine.windFarmId]));
+          });
+      }
+    });
   }
 
   updateChart(data: TurbineDataReadViewModel[]){

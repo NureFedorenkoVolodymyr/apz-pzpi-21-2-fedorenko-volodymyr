@@ -1,0 +1,61 @@
+<mat-card>
+    <form [formGroup]="turbineForm" (ngSubmit)="onSubmit()">
+      <h1>{{formActionLabel}} Turbine</h1>
+
+      <h3>General</h3>
+      <div class="fields">
+        <mat-form-field appearance="fill">
+            <mat-label>Turbine Radius (m)</mat-label>
+            <input matInput formControlName="turbineRadius" type="number" required>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>Efficiency (%)</mat-label>
+            <input matInput formControlName="efficiency" type="number" required>
+          </mat-form-field>
+      </div>
+
+      <h3>Coordinates</h3>
+      <div class="fields">
+        <mat-form-field appearance="fill">
+            <mat-label>Latitude</mat-label>
+            <input matInput formControlName="latitude" type="number" required>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>Longitude</mat-label>
+            <input matInput formControlName="longitude" type="number" required>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>Altitude</mat-label>
+            <input matInput formControlName="altitude" type="number" required>
+          </mat-form-field>
+      </div>
+
+      <h3>Wind Speed (m/s)</h3>
+      <div class="fields">
+        <mat-form-field appearance="fill">
+            <mat-label>Cut-in</mat-label>
+            <input matInput formControlName="cutInWindSpeed" type="number" required>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>Rated</mat-label>
+            <input matInput formControlName="ratedWindSpeed" type="number" required>
+          </mat-form-field>
+    
+          <mat-form-field appearance="fill">
+            <mat-label>Shut-down</mat-label>
+            <input matInput formControlName="shutDownWindSpeed" type="number" required>
+          </mat-form-field>
+      </div>
+  
+      <div class="actions">
+        <button mat-raised-button color="accent" type="submit" [disabled]="turbineForm.invalid">
+          {{formActionLabel}}
+        </button>
+        <button mat-raised-button (click)="navigateToMain()">Cancel</button>
+      </div>
+    </form>
+</mat-card>

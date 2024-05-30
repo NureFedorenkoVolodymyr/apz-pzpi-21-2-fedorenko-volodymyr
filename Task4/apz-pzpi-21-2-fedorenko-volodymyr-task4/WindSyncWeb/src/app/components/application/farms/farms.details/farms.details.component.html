@@ -17,7 +17,7 @@
     <div>
         <div class="turbines-header">
             <h2>Turbines</h2>
-            <button routerLink="add" mat-raised-button color="primary">Add</button>
+            <button routerLink="add" mat-raised-button color="primary" (click)="onAddTurbine()">Add</button>
         </div>
 
         <table mat-table [dataSource]="turbines" multiTemplateDataRows class="mat-elevation-z8">
