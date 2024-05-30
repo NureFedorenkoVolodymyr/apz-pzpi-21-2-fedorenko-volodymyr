@@ -1,43 +1,7 @@
-<h1>Farm Details</h1>
-
-@if(farm){
-  <div class="farm-header">
-    <mat-card class="example-card">
-      <mat-card-header>
-        <mat-card-title>Id: {{farm.id}}</mat-card-title>
-        <mat-card-subtitle>Address: {{farm.address}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-divider></mat-divider>
-      <mat-card-content>
-        <table>
-          <tr>
-            <td>Turbine count: <i>{{turbines.length}}</i></td>
-            <td>Avg. wind speed: <i>{{turbinesCombinedData.windSpeed}} (m/s)</i></td>
-          </tr>
-          <tr>
-            <td>Operational turbines: <i>{{operationalTurbinesCount}}</i></td>
-            <td>Avg. rated power: <i>{{turbinesCombinedData.ratedPower}} (MW)</i></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>Total power output: <i>{{turbinesCombinedData.powerOutput}} (MW)</i></td>
-          </tr>
-        </table>
-      </mat-card-content>
-      <mat-divider></mat-divider>
-      <mat-card-actions>
-          <button mat-raised-button color="accent" (click)="onFarmUpdate()">Update</button>
-          <button mat-raised-button color="warn" (click)="onFarmDelete()">Delete</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-}
-
 @if(turbines){
     <div>
         <div class="turbines-header">
             <h2>Turbines</h2>
-            <button routerLink="add" mat-raised-button color="primary" (click)="onAddTurbine()">Add</button>
         </div>
 
         <table mat-table [dataSource]="turbines" multiTemplateDataRows class="mat-elevation-z8">

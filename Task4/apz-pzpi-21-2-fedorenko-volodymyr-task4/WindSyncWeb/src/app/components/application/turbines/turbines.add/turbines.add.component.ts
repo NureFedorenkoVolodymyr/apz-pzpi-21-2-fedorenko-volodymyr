@@ -36,7 +36,6 @@ export class TurbinesAddComponent {
 
   ngOnInit(): void {
     this.farmId = this.route.snapshot.params['farm-id'] as number;
-    console.log(this.route.snapshot);
     this.turbineId = this.route.snapshot.params['id'] as number;
 
     this.turbineForm = this.fb.group({
@@ -78,11 +77,6 @@ export class TurbinesAddComponent {
   }
 
   navigateToMain(){
-    // if(this.turbineId)
-    //   this.router.navigate(['farms', this.farmId]);
-    // else
-    //   this.router.navigate(['farms', this.farmId]);
-
     this.router.navigate(['farms', this.farmId]);
   }
 }

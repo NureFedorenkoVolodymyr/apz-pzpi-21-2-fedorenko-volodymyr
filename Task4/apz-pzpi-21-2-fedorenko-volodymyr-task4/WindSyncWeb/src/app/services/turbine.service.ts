@@ -16,6 +16,10 @@ export class TurbineService {
     return this.http.get<TurbineReadViewModel>(`${this.apiUrl}/${id}`);
   }
 
+  getMy() {
+    return this.http.get<TurbineReadViewModel[]>(`${this.apiUrl}/my`);
+  }
+
   add(turbine: TurbineAddViewModel) {
     return this.http.post(this.apiUrl, turbine);
   }

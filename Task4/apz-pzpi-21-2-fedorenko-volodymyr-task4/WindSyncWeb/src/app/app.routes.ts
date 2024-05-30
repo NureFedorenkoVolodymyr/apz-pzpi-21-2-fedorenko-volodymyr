@@ -6,6 +6,7 @@ import { FarmsViewComponent } from './components/application/farms/farms.view/fa
 import { FarmsAddComponent } from './components/application/farms/farms.add/farms.add.component';
 import { FarmsDetailsComponent } from './components/application/farms/farms.details/farms.details.component';
 import { TurbinesAddComponent } from './components/application/turbines/turbines.add/turbines.add.component';
+import { TurbinesViewComponent } from './components/application/turbines/turbines.view/turbines.view.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, pathMatch: 'full'},
@@ -21,5 +22,8 @@ export const routes: Routes = [
             { path: 'turbines/add', component: TurbinesAddComponent },
             { path: 'turbines/update/:id', component: TurbinesAddComponent }
         ]}
+    ]},
+    { path: 'turbines', canActivate: [authGuard], children: [
+        { path: '', component: TurbinesViewComponent }
     ]}
 ];
