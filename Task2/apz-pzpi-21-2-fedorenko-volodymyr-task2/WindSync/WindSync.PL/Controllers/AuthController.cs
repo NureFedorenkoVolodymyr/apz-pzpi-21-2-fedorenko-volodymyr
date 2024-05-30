@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using WindSync.BLL.Dtos;
 using WindSync.BLL.Services.Auth;
 using WindSync.PL.ViewModels.Auth;
@@ -58,6 +60,17 @@ namespace WindSync.PL.Controllers
                 return BadRequest();
 
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("roles")]
+        public async Task<ActionResult> GetRoles()
+        {
+            var roles = HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value);
+            return Ok(roles);
         }
 
         [Authorize]
