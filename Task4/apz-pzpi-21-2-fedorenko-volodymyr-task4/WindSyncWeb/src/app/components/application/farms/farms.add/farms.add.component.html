@@ -1,6 +1,6 @@
 <mat-card>
     <form [formGroup]="farmForm" (ngSubmit)="onSubmit()">
-      <h1>{{formActionLabel}}</h1>
+      <h1>{{formActionLabel}} Farm</h1>
 
       <mat-form-field appearance="fill">
         <mat-label>Address</mat-label>
@@ -8,7 +8,9 @@
       </mat-form-field>
   
       <div class="actions">
-        <button mat-raised-button color="accent" type="submit" [disabled]="farmForm.invalid">Add</button>
+        <button mat-raised-button color="accent" type="submit" [disabled]="farmForm.invalid">
+          {{formActionLabel}}
+        </button>
         <button mat-raised-button (click)="navigateToMain()">Cancel</button>
       </div>
     </form>

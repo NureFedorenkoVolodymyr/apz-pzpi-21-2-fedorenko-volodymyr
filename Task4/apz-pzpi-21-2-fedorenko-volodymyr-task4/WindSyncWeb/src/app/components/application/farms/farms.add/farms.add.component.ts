@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FarmService } from '../../../../services/farm.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FarmAddViewModel } from '../../../../../assets/models/farm.add.viewmodel';
+import { FarmReadViewModel } from '../../../../../assets/models/farm.read.viewmodel';
 
 @Component({
   selector: 'app-farms.add',
@@ -32,20 +33,19 @@ export class FarmsAddComponent implements OnInit {
   });
 
   farmId?: number;
+  farmUserId?: string;
   formActionLabel: string = 'Add';
-  cancelRouterLink: string = '../';
 
   ngOnInit(): void {
     this.farmId = this.route.snapshot.params['id'] as number;
     if(this.farmId){
-      this.formActionLabel = 'Edit';
-      this.cancelRouterLink = '../../';
+      this.formActionLabel = 'Update';
 
-      // this.farmForm.getById(this.employeeId)
-      //   .subscribe(result => {
-      //     this.employeeForm.patchValue(result);
-      //     this.employeeForm.controls.email.disable();
-      //   });
+      this.farmService.getById(this.farmId)
+        .subscribe(result => {
+          this.farmUserId = result.userId;
+          this.farmForm.patchValue(result);
+        });
     }
   }
 
@@ -53,13 +53,14 @@ export class FarmsAddComponent implements OnInit {
     if(!this.farmForm.valid)
       return;
 
-    let farm = this.farmForm.getRawValue() as FarmAddViewModel;
+    let farm = this.farmForm.getRawValue() as FarmReadViewModel;
 
-    if(this.farmId){
-      // employee.id = this.employeeId;
-      // this.employeeService.update(employee)
-      //   .subscribe(() => {this.navigateToMain()});
-      // return;
+    if(this.farmId && this.farmUserId){
+      farm.id = this.farmId;
+      farm.userId = this.farmUserId;
+      this.farmService.update(farm)
+        .subscribe(() => {this.navigateToMain()});
+      return;
     }
 
     this.farmService.add(farm)
@@ -67,6 +68,9 @@ export class FarmsAddComponent implements OnInit {
   }
 
   navigateToMain(){
-    this.router.navigate(['farms']);
+    if(this.farmId)
+      this.router.navigate(['farms', this.farmId]);
+    else
+      this.router.navigate(['farms']);
   }
 }

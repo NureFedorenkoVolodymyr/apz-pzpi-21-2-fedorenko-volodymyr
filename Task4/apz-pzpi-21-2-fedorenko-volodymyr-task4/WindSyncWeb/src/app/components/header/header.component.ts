@@ -24,17 +24,11 @@ export class HeaderComponent implements OnInit {
   router = inject(Router);
 
   isAuthenticated: boolean = false;
-  currentEmail: string = '';
 
   ngOnInit(): void {
     this.authService.isAuthenticatedListener()
       .subscribe(authState => {
         this.isAuthenticated = authState;
-      });
-
-    this.authService.currentEmailListener()
-      .subscribe(email => {
-        this.currentEmail = email;
       });
   }
 

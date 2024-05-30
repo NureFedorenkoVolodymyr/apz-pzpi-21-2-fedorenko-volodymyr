@@ -13,7 +13,8 @@ export const routes: Routes = [
     ]},
     { path: 'farms', canActivate: [authGuard], children: [
         { path: '', component: FarmsViewComponent},
-        { path: ':id', component: FarmsDetailsComponent},
-        { path: 'add', component: FarmsAddComponent}
+        { path: 'add', component: FarmsAddComponent},
+        { path: 'update/:id', component: FarmsAddComponent},
+        { path: ':id', component: FarmsDetailsComponent}
     ]}
 ];

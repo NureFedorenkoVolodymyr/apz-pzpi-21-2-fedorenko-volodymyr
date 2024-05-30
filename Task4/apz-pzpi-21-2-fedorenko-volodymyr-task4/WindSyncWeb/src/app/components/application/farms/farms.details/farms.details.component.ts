@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FarmService } from '../../../../services/farm.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FarmReadViewModel } from '../../../../../assets/models/farm.read.viewmodel';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { TurbineStatus } from '../../../../../assets/enums/turbine.status';
 import { TurbinesDetailsComponent } from '../../turbines/turbines.details/turbines.details.component';
+import { MatDialog } from '@angular/material/dialog';
+import { FarmsDeleteComponent } from '../farms.delete/farms.delete.component';
 
 @Component({
   selector: 'app-farms.details',
@@ -38,6 +40,7 @@ export class FarmsDetailsComponent implements OnInit {
   private farmService = inject(FarmService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  dialog = inject(MatDialog);
 
   farmId?: number;
   farm!: FarmReadViewModel;
@@ -69,5 +72,22 @@ export class FarmsDetailsComponent implements OnInit {
       .subscribe(result => {
         this.turbines = result;
       });
+  }
+
+  onFarmUpdate() {
+    this.router.navigate(['farms', 'update', this.farmId]);
+  }
+
+  onFarmDelete(): void {
+    const dialogRef = this.dialog.open(FarmsDeleteComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.farmService.delete(this.farmId!)
+          .subscribe(() => {
+            this.router.navigate(['farms']);
+          });
+      }
+    });
   }
 }

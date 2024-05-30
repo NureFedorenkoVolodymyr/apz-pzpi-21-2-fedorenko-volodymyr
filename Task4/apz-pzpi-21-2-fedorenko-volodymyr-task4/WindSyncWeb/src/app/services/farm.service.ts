@@ -14,7 +14,7 @@ export class FarmService {
   private http = inject(HttpClient);
 
   getMy() {
-    return this.http.get<FarmReadViewModel[]>(this.apiUrl);
+    return this.http.get<FarmReadViewModel[]>(`${this.apiUrl}/my`);
   }
 
   getById(id: number) {
@@ -27,5 +27,13 @@ export class FarmService {
 
   add(farm: FarmAddViewModel) {
     return this.http.post(this.apiUrl, farm);
+  }
+
+  update(farm: FarmReadViewModel) {
+    return this.http.put(`${this.apiUrl}/${farm.id}`, farm);
+  }
+
+  delete(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

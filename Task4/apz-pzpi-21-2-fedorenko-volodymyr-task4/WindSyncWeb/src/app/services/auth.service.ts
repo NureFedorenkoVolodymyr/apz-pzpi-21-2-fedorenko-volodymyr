@@ -13,7 +13,6 @@ export class AuthService {
   private http = inject(HttpClient);
 
   private authState = new BehaviorSubject<boolean>(this.isTokenPresent());
-  private currentEmail = new BehaviorSubject<string>('');
 
   login(credentials: LoginViewModel) {
     return this.http.post(`${this.apiUrl}/login`, credentials, { responseType: 'text' });
@@ -27,14 +26,9 @@ export class AuthService {
     return this.isTokenPresent();
   }
 
-  currentEmailListener() {
-    return this.currentEmail.asObservable();
-  }
-
   setToken(token: string, email: string) {
     localStorage.setItem(Constants.authTokenProperty, token);
     this.authState.next(true);
-    this.currentEmail.next(email);
   }
 
   getToken() {
@@ -44,7 +38,6 @@ export class AuthService {
   removeToken() {
     localStorage.removeItem(Constants.authTokenProperty);
     this.authState.next(false);
-    this.currentEmail.next('');
   }
 
   private isTokenPresent(): boolean {
