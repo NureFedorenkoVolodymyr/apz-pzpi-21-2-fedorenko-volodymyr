@@ -1,0 +1,29 @@
+<div class="details-container">
+    <div class="header">
+        <h2>Status: {{TurbineStatus[turbine.status]}}</h2>
+        <div>
+            <h3>Cut-in wind speed: {{turbine.cutInWindSpeed}}m/s</h3>
+            <h3>Rated wind speed: {{turbine.ratedWindSpeed}}m/s</h3>
+            <h3>Shutdown wind speed: {{turbine.shutDownWindSpeed}}m/s</h3>
+        </div>
+    </div>
+
+    @if(chartOptions){
+        <div id="chart">
+            <apx-chart
+                [series]="chartOptions.series!"
+                [chart]="chartOptions.chart!"
+                [xaxis]="chartOptions.xaxis!"
+                [yaxis]="chartOptions.yaxis!"
+                [stroke]="chartOptions.stroke!"
+                [tooltip]="chartOptions.tooltip!"
+                [dataLabels]="chartOptions.dataLabels!"
+            ></apx-chart>
+        </div>
+    }
+
+    <div class="actions">
+        <button mat-raised-button color="accent">Update</button>
+        <button mat-raised-button color="warn">Delete</button>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+.details-container {
+    width: 100%;
+
+    .header, .actions {
+        width: 100%;
+        display: flex;
+    }
+
+    .header {
+        justify-content: space-between;
+    }
+
+    .actions {
+        justify-content: flex-end;
+        gap: 5px;
+    }
+}
+
+#chart {
+    width: 100%;
+    margin: 35px auto;
+}

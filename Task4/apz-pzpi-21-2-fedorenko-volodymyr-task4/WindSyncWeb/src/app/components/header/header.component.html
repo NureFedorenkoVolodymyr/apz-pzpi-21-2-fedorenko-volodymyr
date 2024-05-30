@@ -1,0 +1,28 @@
+<mat-toolbar color="primary">
+    <div class="logo-container" routerLink="/">
+      <img src="assets/images/wind-sync-logo-light.png" alt="Logo" style="height: 40px; margin-right: 8px;">
+      <span>WindSync</span>
+    </div>
+    <button mat-button routerLink="/farms">WindFarms</button>
+    <button mat-button routerLink="/turbines">Turbines</button>
+    <span class="spacer"></span>
+    @if(isAuthenticated) {
+      <button mat-button [matMenuTriggerFor]="menu">
+        {{currentEmail}}
+      </button>
+      <mat-menu #menu="matMenu">
+        <!-- <button mat-menu-item>Profile</button> -->
+        <button mat-menu-item (click)="onLogout()">Logout</button>
+      </mat-menu>
+    }
+    @else {
+      <button mat-button [matMenuTriggerFor]="menu">
+        Join
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/auth/login">Login</button>
+        <button mat-menu-item routerLink="/auth/register">Register</button>
+      </mat-menu>
+    }
+</mat-toolbar>
+  

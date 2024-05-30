@@ -1,0 +1,18 @@
+<div class="header">
+    <h1>My farms</h1>
+    <button mat-raised-button color="accent" routerLink="/farms/add">Add</button>
+</div>
+
+<div class="farms-container">
+    @for(farm of farms; track farm) {
+        <mat-card class="example-card">
+            <mat-card-content>
+              <div class="farm-header">
+                <h2>Id: {{farm.id}}</h2>
+                <button mat-raised-button color="primary" (click)="onFarmDetails(farm.id)">Details</button>
+              </div>
+              <h3><b>Address:</b> {{farm.address}}</h3>
+            </mat-card-content>
+        </mat-card>
+    }
+</div>

@@ -1,3 +1,4 @@
+using WindSync.Core.Utils;
 using WindSync.PL.Configuration;
 using WindSync.PL.Middleware;
 
@@ -16,6 +17,9 @@ app.UseSwaggerUI(c =>
 });
 
 //app.UseHttpsRedirection();
+
+var corsName = builder.Configuration[Constants.AngularCorsName];
+app.UseCors(corsName);
 
 app.UseAuthentication();
 app.UseAuthorization();

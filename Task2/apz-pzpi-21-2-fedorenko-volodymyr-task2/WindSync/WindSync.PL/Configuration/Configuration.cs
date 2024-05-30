@@ -66,6 +66,21 @@ public static class Configuration
         builder.Services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+        // CORS settings
+        var corsName = builder.Configuration[Constants.AngularCorsName];
+        var corsOrigin = builder.Configuration[Constants.AngularCorsOrigin];
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: corsName,
+                builder =>
+                {
+                    builder.WithOrigins(corsOrigin)
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+        });
     }
 
     public static void ConfigureAuthentication(WebApplicationBuilder builder)

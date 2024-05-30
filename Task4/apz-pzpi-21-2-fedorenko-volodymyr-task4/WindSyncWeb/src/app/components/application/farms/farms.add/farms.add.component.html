@@ -1,0 +1,16 @@
+<mat-card>
+    <form [formGroup]="farmForm" (ngSubmit)="onSubmit()">
+      <h1>{{formActionLabel}}</h1>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address" type="text" required>
+      </mat-form-field>
+  
+      <div class="actions">
+        <button mat-raised-button color="accent" type="submit" [disabled]="farmForm.invalid">Add</button>
+        <button mat-raised-button (click)="navigateToMain()">Cancel</button>
+      </div>
+    </form>
+  </mat-card>
+  

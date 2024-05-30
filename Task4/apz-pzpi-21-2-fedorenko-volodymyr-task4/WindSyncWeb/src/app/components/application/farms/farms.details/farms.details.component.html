@@ -1,0 +1,73 @@
+<h1>Farm Details</h1>
+
+@if(farm){
+    <mat-card class="example-card">
+        <mat-card-content>
+            <h2>Id: {{farm.id}}</h2>
+            <h3><b>Address:</b> {{farm.address}}</h3>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="accent">Update</button>
+            <button mat-raised-button color="warn">Delete</button>
+        </mat-card-actions>
+    </mat-card>
+}
+
+@if(turbines){
+    <div>
+        <div class="turbines-header">
+            <h2>Turbines</h2>
+            <button routerLink="add" mat-raised-button color="primary">Add</button>
+        </div>
+
+        <table mat-table [dataSource]="turbines" multiTemplateDataRows class="mat-elevation-z8">
+            @for (column of turbinesDisplayedColumns; track column) {
+                <ng-container matColumnDef="{{column}}">
+                  <th mat-header-cell *matHeaderCellDef> {{turbinesColumnNames[column]}} </th>
+                  <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+                </ng-container>
+              }
+
+              <ng-container matColumnDef="expand">
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                <td mat-cell *matCellDef="let element">
+                  <button mat-icon-button aria-label="expand row" (click)="(expandedTurbine = expandedTurbine === element ? null : element); $event.stopPropagation()">
+                    @if (expandedTurbine === element) {
+                      <mat-icon>keyboard_arrow_up</mat-icon>
+                    } @else {
+                      <mat-icon>keyboard_arrow_down</mat-icon>
+                    }
+                  </button>
+                </td>
+              </ng-container>
+            
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="turbinesDisplayedColumnsWithExpand.length">
+                  <div class="example-element-detail"
+                       [@detailExpand]="element == expandedTurbine ? 'expanded' : 'collapsed'">
+                    <div class="example-element-diagram">
+                      <div class="example-element-position"> {{element.position}} </div>
+                      <div class="example-element-symbol"> {{element.symbol}} </div>
+                      <div class="example-element-name"> {{element.name}} </div>
+                      <div class="example-element-weight"> {{element.weight}} </div>
+                    </div>
+                    <div class="example-element-description">
+                      <app-turbines-details [turbine]="element"></app-turbines-details>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+            
+              <tr mat-header-row *matHeaderRowDef="turbinesDisplayedColumnsWithExpand"></tr>
+              <tr mat-row *matRowDef="let element; columns: turbinesDisplayedColumnsWithExpand;"
+                  class="example-element-row"
+                  [class.example-expanded-row]="expandedTurbine === element"
+                  (click)="expandedTurbine = expandedTurbine === element ? null : element">
+              </tr>
+              <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        
+            <!-- <tr mat-header-row *matHeaderRowDef="turbinesDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: turbinesDisplayedColumns;"></tr> -->
+        </table>
+    </div>
+}
