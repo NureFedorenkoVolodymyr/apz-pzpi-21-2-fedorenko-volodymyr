@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="WindSyncApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:WindSyncApp"
+    xmlns:views="clr-namespace:WindSyncApp.Views"
+    xmlns:main="clr-namespace:WindSyncApp"
+    xmlns:res="clr-namespace:WindSyncApp.Resources.Locale"
+    Shell.FlyoutBehavior="Disabled"
+    Title="WindSyncApp">
+
+    <TabBar>
+        <ShellContent Title="{x:Static res:AppResources.TabsTurbines}" Icon="turbines.png" Route="TurbinesPage" ContentTemplate="{DataTemplate views:TurbinesPage}" />
+        <ShellContent Title="{x:Static res:AppResources.TabsAlerts}" Icon="alerts.png" Route="AlertsPage" ContentTemplate="{DataTemplate views:AlertsPage}" />
+        <ShellContent Title="{x:Static res:AppResources.TabsProfile}" Icon="profile.png" Route="ProfilePage" ContentTemplate="{DataTemplate views:ProfilePage}" />
+        <!--<ShellContent Route="turbineDetail" ContentTemplate="{DataTemplate views:TurbineDetailPage}" />-->
+    </TabBar>
+
+    <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate views:LoginPage}" />
+
+</Shell>
