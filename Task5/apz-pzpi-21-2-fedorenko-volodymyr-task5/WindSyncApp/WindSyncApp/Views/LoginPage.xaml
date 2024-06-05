@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:res="clr-namespace:WindSyncApp.Resources.Locale"
+             x:Class="WindSyncApp.Views.LoginPage"
+             Title=""
+             >
+    
+    <Border Padding="10"
+            StrokeShape="RoundRectangle 8"
+            WidthRequest="220"
+            HeightRequest="200"
+            Margin="40"
+            VerticalOptions="Start">
+        <StackLayout>
+            <Label Text="{x:Static res:AppResources.LoginTitle}"
+                   FontSize="20"
+                   HorizontalTextAlignment="Center"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"/>
+            <Entry x:Name="EmailEntry"
+                   Placeholder="{x:Static res:AppResources.LoginEmailPlaceholder}"
+                   PlaceholderColor="{StaticResource Gray900}"
+                   WidthRequest="200"
+                   TextColor="Black" />
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="{x:Static res:AppResources.LoginPasswordPlaceholder}"
+                   PlaceholderColor="{StaticResource Gray900}"
+                   WidthRequest="200"
+                   TextColor="Black"
+                   IsPassword="True" />
+            <Button Text="{x:Static res:AppResources.LoginButton}"
+                    BackgroundColor="{StaticResource Primary}"
+                    Clicked="OnLoginButtonClicked"
+                    WidthRequest="100"
+                    TextColor="White"
+                    Margin="10"/>
+        </StackLayout>
+    </Border>
+</ContentPage>
