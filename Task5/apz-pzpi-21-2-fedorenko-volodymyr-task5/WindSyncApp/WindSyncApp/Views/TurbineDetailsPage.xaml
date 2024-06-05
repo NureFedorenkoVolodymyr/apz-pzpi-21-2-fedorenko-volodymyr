@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:WindSyncApp.Views"
+             xmlns:res="clr-namespace:WindSyncApp.Resources.Locale"
+             x:Class="WindSyncApp.Views.TurbineDetailsPage"
+             Title="{x:Static res:AppResources.TurbineDetailsTitle}">
+
+    <VerticalStackLayout>
+        <Border Style="{StaticResource CardView}"
+            HeightRequest="180">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="{x:Static res:AppResources.TurbineId}" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                <Label x:Name="IdLabel" Grid.Row="0" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineStatus}" FontAttributes="Bold" Grid.Row="1" Grid.Column="0" />
+                <Label x:Name="StatusLabel" Grid.Row="1" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineRadius}" FontAttributes="Bold" Grid.Row="2" Grid.Column="0" />
+                <Label x:Name="RadiusLabel" Grid.Row="2" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineSweptArea}" FontAttributes="Bold" Grid.Row="3" Grid.Column="0" />
+                <Label x:Name="SweptAreaLabel" Grid.Row="3" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineLatitude}" FontAttributes="Bold" Grid.Row="4" Grid.Column="0" />
+                <Label x:Name="LatitudeLabel" Grid.Row="4" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineLongitude}" FontAttributes="Bold" Grid.Row="5" Grid.Column="0" />
+                <Label x:Name="LongitudeLabel" Grid.Row="5" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineAltitude}" FontAttributes="Bold" Grid.Row="6" Grid.Column="0" />
+                <Label x:Name="AltitudeLabel" Grid.Row="6" Grid.Column="1" />
+
+                <Label Text="{x:Static res:AppResources.TurbineEfficiency}" FontAttributes="Bold" Grid.Row="7" Grid.Column="0" />
+                <Label x:Name="EfficiencyLabel" Grid.Row="7" Grid.Column="1" />
+            </Grid>
+        </Border>
+
+
+        <Label Text="{x:Static res:AppResources.TurbineDataTitle}" FontSize="18" FontAttributes="Bold" Margin="10,40,0,10"/>
+        
+        <Grid Padding="10" BackgroundColor="{StaticResource Primary}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Text="{x:Static res:AppResources.TurbineDataDate}"
+                   Grid.Column="0"
+                   FontSize="12"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+            <Label Text="{x:Static res:AppResources.TurbineDataWindSpeed}"
+                   Grid.Column="1"
+                   FontSize="12"
+                   HorizontalTextAlignment="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+            <Label Text="{x:Static res:AppResources.TurbineDataRatedPower}" Grid.Column="2" FontSize="12"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+            <Label Text="{x:Static res:AppResources.TurbineDataPowerOutput}" Grid.Column="3" FontSize="12"
+                   TextColor="White"
+                   FontAttributes="Bold"/>
+        </Grid>
+        <CollectionView ItemsSource="{Binding TurbineData}" HeightRequest="380">
+                <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="{StaticResource Primary}" StrokeThickness="1" Padding="0" Margin="-1">
+                        <Grid Padding="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding DateTime, StringFormat='{0:HH:mm yy-MM-dd}'}" Grid.Column="0" FontSize="12" HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding WindSpeed, StringFormat='{0:F0}'}" Grid.Column="1" FontSize="12" HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding RatedPower, StringFormat='{0:F0}'}" Grid.Column="2" FontSize="12" />
+                            <Label Text="{Binding PowerOutput, StringFormat='{0:F0}'}" Grid.Column="3" FontSize="12" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
